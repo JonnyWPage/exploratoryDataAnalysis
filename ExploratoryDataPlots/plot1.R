@@ -1,0 +1,25 @@
+library(dplyr)
+
+# Set working directory
+setwd("C:/Users/jonny/Documents/Coursera/Emissions")
+
+# Read in data
+src <- readRDS("Source_Classification_Code.rds")
+dat <- readRDS("summarySCC_PM25.rds")
+
+# Manipulate data
+dat$date <- as.factor(dat$year)
+
+by_year <- group_by(dat,date)
+
+emissionsByYear <- summarise(by_year,emission=sum(Emissions))
+emissionsByYear$newDate <- c(1999,2002,2005,2008)
+
+# Plot 
+png(filename="Plot1.png")
+with(emissionsByYear, 
+     plot(newDate,emission,main="Total emissions from 1998-2008",pch=0,
+          xlab="Date",ylab="PM2.5 Emitted (Tons)"))
+lines(emissionsByYear$newDate,emissionsByYear$emission)
+dev.off()
+
